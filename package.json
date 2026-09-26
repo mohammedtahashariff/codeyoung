@@ -1,0 +1,15 @@
+{
+  "name": "codeyoung-trial-booking",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev:all",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd \"Premium Trial Class Booking\" && npm run dev",
+    "dev:all": "node scripts/start-dev.js",
+    "build:client": "cd \"Premium Trial Class Booking\" && npm run build",
+    "test:server": "cd server && npm test",
+    "seed:server": "cd server && npm run prisma:seed"
+  },
+  "devDependencies": {}
+}
