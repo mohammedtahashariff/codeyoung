@@ -1,19 +1,21 @@
 <p align="center">
-  <img src="Premium%20Trial%20Class%20Booking/public/favicon.svg" alt="Codeyoung logo" width="72" />
+  <img src="Premium%20Trial%20Class%20Booking/public/favicon.svg" alt="Codeyoung logo" width="88" />
 </p>
 
 <h1 align="center">Codeyoung Trial Class Booking</h1>
 
 <p align="center">
-  A responsive trial-class booking experience for families, with timezone-aware availability, mentor selection, and a Node.js booking API.
+  <strong>A thoughtful first step into coding—made simple for families.</strong><br />
+  Book a free, mentor-led coding trial with clear scheduling, local times, and a guided experience from start to confirmation.
 </p>
 
 <p align="center">
-  <a href="https://codeyoungassessment.vercel.app/"><strong>Open the live project →</strong></a>
+  <a href="https://codeyoungassessment.vercel.app/"><strong>✨ Try the live application →</strong></a>
 </p>
 
 <p align="center">
   <img alt="React" src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" />
   <img alt="Vite" src="https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white" />
   <img alt="Express" src="https://img.shields.io/badge/Express-4-111111?logo=express&logoColor=white" />
   <img alt="Prisma" src="https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma&logoColor=white" />
@@ -21,7 +23,7 @@
 
 ---
 
-## At a glance
+## Project snapshot
 
 | | |
 |---|---|
@@ -32,28 +34,50 @@
 | **Tests** | Node.js built-in test runner and Supertest |
 | **AI session file** | [`TRANSCRIPT.md`](TRANSCRIPT.md) |
 
-## Product overview
+## The experience
 
 Families can book a free, 45-minute coding trial for a learner. The interface walks them through learner and parent details, local date/time selection, an available mentor, and a final booking review. The experience is responsive and includes light and dark themes.
 
-### What’s included
+### Designed around a parent’s journey
 
-- **Guided booking flow** — collect learner and guardian details, choose a date and timezone, review available class times and mentors, and confirm the booking.
-- **Timezone-aware scheduling** — use IANA timezone names and convert booking times to UTC with Luxon, including daylight-saving changes.
-- **Mentor availability rules** — check working hours (weekdays, 10:00–21:00 in Asia/Kolkata), overlapping bookings, and a maximum of two trial classes per mentor per local day.
-- **Capacity feedback** — show available slots and remaining daily capacity before a family submits a booking.
-- **Booking notifications** — optional Resend or SMTP email delivery for parent confirmations and mentor notifications. Without a configured provider, email runs in dry-run/log-only mode.
-- **Floating assistant** — separate **Booking** and **General chat** modes. General chat provides quick, rule-based answers about trial classes, programs, mentors, scheduling, and preparation; it does not call an external AI service.
-- **API safeguards** — Zod request validation, Helmet headers, rate limiting, and centralized error responses.
-- **Demo mentor data** — seed ten mentor records for local development.
+| Step | What the family does | What the system handles |
+|---|---|---|
+| **01 · Learner** | Share the learner’s age, grade, interests, and guardian contact details. | Validate required fields and keep student email optional. |
+| **02 · Schedule** | Choose a weekday, timezone, and available 45-minute slot. | Convert local time correctly across IANA zones and DST changes. |
+| **03 · Mentor** | Review mentors available for the selected time. | Check work hours, daily limits, and overlapping bookings. |
+| **04 · Confirm** | Review the details and confirm the free trial. | Save the booking and prepare parent/mentor notifications. |
+
+### Product and engineering highlights
+
+- **Booking assistant + general chat** — two focused modes; general answers are rule-based and do not call an external AI service.
+- **Fair mentor assignment** — weekday working hours are 10:00–21:00 in Asia/Kolkata; each mentor is limited to two trials per local day.
+- **Capacity feedback** — show slot availability and remaining daily capacity before confirmation.
+- **Resilient notifications** — optional Resend or SMTP delivery; email errors are non-fatal to booking completion.
+- **Secure API defaults** — Zod validation, Helmet headers, rate limiting, and centralized safe error responses.
+- **Local-first setup** — SQLite and seeded demo mentors work without a separately managed database server.
 
 > **Prototype note:** class links are generated as demo URLs. This project does not integrate a live video-classroom provider.
 
-## Screenshots
+## Visual preview and screenshots
 
-Screenshot images are not currently stored in this repository. Add the images you want to publish under [`docs/screenshots/`](docs/screenshots/); the folder README contains suggested names and privacy guidance. Once uploaded, link them here with relative Markdown paths—for example, `![Home page — light theme](docs/screenshots/landing-light.png)`—and GitHub will render them in this section.
+<p align="center">
+  <img src="Premium%20Trial%20Class%20Booking/public/mentor.jpg" alt="Codeyoung coding mentor shown in the live application" width="280" />
+</p>
 
-Suggested gallery: light and dark home pages, booking assistant, general chat, booking details, availability, mentor selection, confirmation, and the two email templates. Please crop out personal data, booking IDs, and credentials before committing screenshots.
+The application screenshots shown in the assignment are not yet available as files in this repository. Add them to [`docs/screenshots/`](docs/screenshots/) using the suggested filenames in that folder, then embed them here with Markdown such as `![Home page — light theme](docs/screenshots/landing-light.png)`. Keeping the real screenshots in the repo makes them render reliably on GitHub (and in a cloned copy of the project).
+
+**Recommended gallery:** home (light/dark), booking assistant, general chat, learner details, availability, mentor selection, confirmation, and parent/mentor email previews. Crop out personal information, booking IDs, and all credentials before committing.
+
+| Screenshot | Filename to upload |
+|---|---|
+| Home — light theme | `docs/screenshots/landing-light.png` |
+| Home — dark theme | `docs/screenshots/landing-dark.png` |
+| Booking assistant | `docs/screenshots/booking-assistant.png` |
+| General chat | `docs/screenshots/general-chat.png` |
+| Learner / parent details | `docs/screenshots/booking-details.png` |
+| Date, timezone, and slots | `docs/screenshots/booking-availability.png` |
+| Mentor choice and confirmation | `docs/screenshots/booking-mentors.png`, `docs/screenshots/booking-confirmation.png` |
+| Email previews | `docs/screenshots/parent-confirmation-email.png`, `docs/screenshots/mentor-notification-email.png` |
 
 ## Architecture
 
@@ -208,3 +232,17 @@ Do not run schema-push or seed commands against a database containing important 
 The submitted frontend is available at [https://codeyoungassessment.vercel.app/](https://codeyoungassessment.vercel.app/). The frontend API base can be overridden with `VITE_API_BASE_URL`; production deployments should point it to the deployed backend’s `/api` URL and then rebuild/redeploy the frontend.
 
 For a backend deployment, configure `DATABASE_URL`, `CLIENT_URL`, `NODE_ENV`, and `PORT` in the hosting provider. Generate Prisma using the schema that matches the selected database. Configure a verified email sender and private credentials only when email delivery is required.
+
+## Assignment submission
+
+1. Push the project to GitHub and submit the repository URL alongside the live application link above.
+2. Add the screenshots to `docs/screenshots/` and include them in this README using the filenames in the gallery table.
+3. Include the complete AI-session transcript as `TRANSCRIPT.md`. The current file is an implementation summary; append or replace it with the full prompt-and-response export required by the assignment before submitting.
+4. Email both links to **campus.ka@talentiseglobal.com** by **28 September 2026, 6:00 PM**.
+5. Use the subject: **Codeyoung Assignment Task - `<Candidate Name>` - `<Institute Name (ABBR)>`**.
+
+> **Before publishing:** scan the repository for `.env` files, API keys, booking details, and private email addresses. Keep secrets out of GitHub; configure production credentials only in the hosting provider’s private environment settings.
+
+## AI-assisted development
+
+The repository includes [`TRANSCRIPT.md`](TRANSCRIPT.md) for the assignment’s AI-session record. Keep the final transcript complete and unedited when exporting it, so it contains both the prompts and the assistant responses.
