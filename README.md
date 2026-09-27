@@ -68,29 +68,29 @@ These are the screenshots you uploaded for the project. Select any image to open
 
 | Home · Light theme | Home · Dark theme |
 |:--:|:--:|
-| [![Codeyoung home page in light theme](./docs/screenshots/landing-light.jpg)](./docs/screenshots/landing-light.jpg) | [![Codeyoung home page in dark theme](./docs/screenshots/landing-dark.jpg)](./docs/screenshots/landing-dark.jpg) |
+| [![Codeyoung home page in light theme](./Premium%20Trial%20Class%20Booking/public/light.jpg)](./Premium%20Trial%20Class%20Booking/public/light.jpg) | [![Codeyoung home page in dark theme](./Premium%20Trial%20Class%20Booking/public/dark.jpg)](./Premium%20Trial%20Class%20Booking/public/dark.jpg) |
 
 | Booking assistant | General chat |
 |:--:|:--:|
-| [![Booking assistant](./docs/screenshots/booking-assistant.jpg)](./docs/screenshots/booking-assistant.jpg) | [![General chat](./docs/screenshots/general-chat.jpg)](./docs/screenshots/general-chat.jpg) |
+| [![Booking assistant](./Premium%20Trial%20Class%20Booking/public/chatbot.jpg)](./Premium%20Trial%20Class%20Booking/public/chatbot.jpg) | [![General chat](./Premium%20Trial%20Class%20Booking/public/chatbot1.jpg)](./Premium%20Trial%20Class%20Booking/public/chatbot1.jpg) |
 
 | Student details | Parent details |
 |:--:|:--:|
-| [![Student details](./docs/screenshots/student.jpg)](./docs/screenshots/student.jpg) | [![Parent details](./docs/screenshots/parent-details.jpg)](./docs/screenshots/parent-details.jpg) |
+| [![Student details](./Premium%20Trial%20Class%20Booking/public/student.jpg)](./Premium%20Trial%20Class%20Booking/public/student.jpg) | [![Parent details](./Premium%20Trial%20Class%20Booking/public/parent.jpg)](./Premium%20Trial%20Class%20Booking/public/parent.jpg) |
 
 | Date, timezone & available times | Booking review |
 |:--:|:--:|
-| [![Available dates and times](./docs/screenshots/time.jpg)](./docs/screenshots/time.jpg) | [![Booking review](./docs/screenshots/booking-review.jpg)](./docs/screenshots/booking-review.jpg) |
+| [![Available dates and times](./Premium%20Trial%20Class%20Booking/public/time.jpg)](./Premium%20Trial%20Class%20Booking/public/time.jpg) | [![Booking review](./Premium%20Trial%20Class%20Booking/public/draft.jpg)](./Premium%20Trial%20Class%20Booking/public/draft.jpg) |
 
 | Booking confirmation | Parent confirmation email |
 |:--:|:--:|
-| [![Booking confirmation](./docs/screenshots/booking-confirmation.jpg)](./docs/screenshots/booking-confirmation.jpg) | [![Parent confirmation email](./docs/screenshots/parent-confirmation-email.jpg)](./docs/screenshots/parent-confirmation-email.jpg) |
+| [![Booking confirmation](./Premium%20Trial%20Class%20Booking/public/conform.jpg)](./Premium%20Trial%20Class%20Booking/public/conform.jpg) | [![Parent confirmation email](./Premium%20Trial%20Class%20Booking/public/parent%20mail.jpg)](./Premium%20Trial%20Class%20Booking/public/parent%20mail.jpg) |
 
 | Mentor notification email | |
 |:--:|:--:|
-| [![Mentor notification email](./docs/screenshots/mentor-notification-email.jpg)](./docs/screenshots/mentor-notification-email.jpg) | |
+| [![Mentor notification email](./Premium%20Trial%20Class%20Booking/public/mentor%20mail.jpg)](./Premium%20Trial%20Class%20Booking/public/mentor%20mail.jpg) | |
 
-The files are stored in `docs/screenshots/`, so the gallery works in GitHub and in cloned copies of the repository. Before making the repository public, check that the email and booking screenshots contain only safe demo data and no private addresses or real booking details.
+The image files are stored in `Premium Trial Class Booking/public/`. Before making the repository public, check that the email and booking screenshots contain only safe demo data and no private addresses or real booking details.
 
 ## Architecture
 
@@ -111,10 +111,9 @@ flowchart LR
 .
 ├── package.json                         # Root scripts for running/testing the app
 ├── scripts/start-dev.js                 # Starts frontend and backend together
-├── docs/screenshots/                    # Add README screenshots here
 ├── TRANSCRIPT.md                        # AI-assisted implementation notes
 ├── Premium Trial Class Booking/         # React + Vite frontend
-│   ├── public/                          # Public images and favicon
+│   ├── public/                          # Logo, mentor photo, and README screenshots
 │   └── src/
 │       ├── App.tsx                      # Pages, booking flow, and assistant
 │       ├── index.css                    # Design system and responsive styles
