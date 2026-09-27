@@ -51,6 +51,19 @@ describe("Automatic Mentor Assignment Service Tests", () => {
     assert.ok(["m1", "m2"].includes(result.mentor.id));
   });
 
+  it("returns exact available mentor IDs for the selected time", async () => {
+    const { startUtc, endUtc } = TimezoneService.parseLocalSlotToUtc("2026-09-30", "10:00 AM", "America/New_York");
+    const mockDb = new MockDbClient(mentors, []);
+
+    const result = await MentorAssignmentService.getAvailableMentorsCount({
+      startTimeUtc: startUtc,
+      endTimeUtc: endUtc,
+      dbClient: mockDb,
+    });
+
+    assert.deepEqual(result.availableMentors.map(({ id }) => id), ["m1", "m2"]);
+  });
+
   it("prevents overlapping bookings for the same mentor", async () => {
     const { startUtc, endUtc } = TimezoneService.parseLocalSlotToUtc("2026-09-30", "10:00 AM", "America/New_York");
     // Existing booking for m1 at the exact same slot

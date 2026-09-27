@@ -1,6 +1,7 @@
 import test, { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { ClassLinkService } from "../src/services/classLinkService.js";
+import { CONFIG } from "../src/config/constants.js";
 import { emailService } from "../src/services/emailService.js";
 
 describe("ClassLink and Email Service Tests", () => {
@@ -37,6 +38,62 @@ describe("ClassLink and Email Service Tests", () => {
       assert.match(result.error, /simulated email provider failure/);
     } finally {
       emailService.send = originalSend;
+    }
+  });
+
+  it("refuses to silently redirect production parent email through the Resend sandbox", async () => {
+    const originalNodeEnv = CONFIG.NODE_ENV;
+    const originalFromEmail = emailService.fromEmail;
+    CONFIG.NODE_ENV = "production";
+    emailService.fromEmail = "Codeyoung <onboarding@resend.dev>";
+
+    try {
+      await assert.rejects(
+        emailService.sendViaResend({
+          to: "parent@example.com",
+          subject: "Booking confirmed",
+          html: "<p>Confirmed</p>",
+          text: "Confirmed",
+        }),
+        /Verify a sending domain and set RESEND_FROM/
+      );
+    } finally {
+      CONFIG.NODE_ENV = originalNodeEnv;
+      emailService.fromEmail = originalFromEmail;
+    }
+  });
+
+  it("sends production email directly to the requested parent with a verified sender", async () => {
+    const originalNodeEnv = CONFIG.NODE_ENV;
+    const originalFromEmail = emailService.fromEmail;
+    const originalApiKey = CONFIG.RESEND_API_KEY;
+    const originalFetch = globalThis.fetch;
+    let requestBody;
+
+    CONFIG.NODE_ENV = "production";
+    CONFIG.RESEND_API_KEY = "test-resend-key";
+    emailService.fromEmail = "Codeyoung <bookings@example.com>";
+    globalThis.fetch = async (_url, options) => {
+      requestBody = JSON.parse(options.body);
+      return { ok: true, json: async () => ({ id: "test-email-id" }) };
+    };
+
+    try {
+      const result = await emailService.sendViaResend({
+        to: "parent@example.com",
+        subject: "Booking confirmed",
+        html: "<p>Confirmed</p>",
+        text: "Confirmed",
+      });
+
+      assert.deepEqual(requestBody.to, ["parent@example.com"]);
+      assert.equal(requestBody.from, "Codeyoung <bookings@example.com>");
+      assert.equal(result.sandboxRedirected, false);
+    } finally {
+      CONFIG.NODE_ENV = originalNodeEnv;
+      CONFIG.RESEND_API_KEY = originalApiKey;
+      emailService.fromEmail = originalFromEmail;
+      globalThis.fetch = originalFetch;
     }
   });
 });

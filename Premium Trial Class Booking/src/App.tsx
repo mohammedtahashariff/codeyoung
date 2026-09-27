@@ -1533,7 +1533,7 @@ function ChooseTime({
   );
 }
 
-// STEP 3: MENTOR (Dedicated screen for selecting from 10 Expert Mentors with daily slot counters)
+// STEP 3: MENTOR (Only mentors available for the selected time can be chosen)
 function ChooseMentor({
   date,
   time,
@@ -1558,11 +1558,8 @@ function ChooseMentor({
   const selectedSlot = safeSlots.find((slot) => slot.time === time);
   const safeTimezoneStr = (timezone || "America/New_York").replaceAll("_", " ");
 
-  // Always allow selection — backend validates real mentor availability.
-  // The old index-based check (mentorIndex < remainingMentors) was wrong:
-  // it blocked clicks on mentors beyond the count, so the user's choice was
-  // silently ignored and the first mentor was always booked instead.
-  const isMentorAvailable = (_mentorIndex: number) => true;
+  const isMentorAvailable = (mentorId: string) =>
+    Boolean(selectedSlot?.availableMentors?.some((availableMentor) => availableMentor.id === mentorId));
 
   return (
     <div className="booking-grid step-enter">
@@ -1588,7 +1585,7 @@ function ChooseMentor({
         <div className="section-heading">
           <span>03</span>
           <div>
-            <strong>Expert Mentors Availability (10 Mentors · Max 2 Classes / Day)</strong>
+            <strong>Mentors Available for This Time</strong>
             <small>
               Select your preferred educator from our top 1% certified coding mentors.
             </small>
@@ -1602,9 +1599,8 @@ function ChooseMentor({
 
         <div className="mentor-grid step-enter" style={{ maxHeight: "none", gridTemplateColumns: "repeat(auto-fit, minmax(270px, 1fr))", gap: "14px" }}>
           {MENTORS.map((item, index) => {
-            const available = isMentorAvailable(index);
+            const available = isMentorAvailable(item.id);
             const isAssigned = selectedMentor === item.id;
-            const mentorRemainingSlots = available ? (index % 3 === 2 ? 1 : 2) : 0;
 
             return (
               <div
@@ -1623,9 +1619,7 @@ function ChooseMentor({
                   <strong style={{ fontSize: "15px" }}>{item.name}</strong>
                   <small style={{ fontSize: "12px" }}>{item.specialty} · ★ {item.rating}</small>
                   <b style={{ color: available ? "#10b981" : "#e11d48", fontSize: "12px", marginTop: "4px" }}>
-                    {available
-                      ? `✓ ${mentorRemainingSlots}/2 slots available today`
-                      : "✕ 0/2 slots available (Fully booked)"}
+                    {available ? "✓ Available for this time" : "✕ Not available for this time"}
                   </b>
                 </span>
                 <span className="mentor-radio">
@@ -1721,7 +1715,7 @@ function Review({
             ["Cost", "100% Free (No payment required)"],
           ]}
         />
-        <div className="confirmation-email"><span><Icon name="check" size={18} /></span><div><small>Confirmation will be sent via Resend to</small><strong>{details.parentEmail || "your email"}</strong><p>We'll send your booking details and live class link to this email.</p>{details.studentEmail && <b>Student email · {details.studentEmail}</b>}</div></div>
+        <div className="confirmation-email"><span><Icon name="check" size={18} /></span><div><small>Booking email recipient</small><strong>{details.parentEmail || "your email"}</strong><p>Booking details and the class link will be emailed here.</p>{details.studentEmail && <b>Student email · {details.studentEmail}</b>}</div></div>
         <div className="details-actions">
           <ActionButton variant="ghost" onClick={onBack} disabled={submitting}>← Edit Mentor / Details</ActionButton>
           <ActionButton onClick={onConfirm} disabled={submitting} style={{ minWidth: "220px", background: "linear-gradient(135deg, #f59e0b, #d97706)", color: "white" }}>
@@ -1792,7 +1786,7 @@ function Success({ date, time, booking, timezone, parentEmail }: { date: DateInf
         <div className="eyebrow">Booking confirmed · #{booking.id.slice(0, 8).toUpperCase()}</div>
         <div className="title">You're all set!</div>
         <p>Your child's trial class has been successfully booked. We can't wait to meet you.</p>
-        <div className="sent-confirmation"><Icon name="check" size={16} /><span><strong>Confirmation sent via Resend</strong> We've sent the booking details and live class link to <b>{parentEmail}</b>.</span></div>
+        <div className="sent-confirmation"><Icon name="check" size={16} /><span><strong>Booking confirmed</strong> A confirmation email is being processed for <b>{parentEmail}</b>. If it does not arrive shortly, check spam or contact support.</span></div>
       </div>
       <div className="confirmation-grid">
         <div className="confirmation-card">

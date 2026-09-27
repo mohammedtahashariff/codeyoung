@@ -6,6 +6,66 @@ import { ClassLinkService } from "./classLinkService.js";
 import { emailService } from "./emailService.js";
 
 export class BookingService {
+  static async assignMentor({ mentorId, startUtc, endUtc, tx }) {
+    if (!mentorId) {
+      const assignment = await MentorAssignmentService.findAvailableMentor({
+        startTimeUtc: startUtc,
+        endTimeUtc: endUtc,
+        dbClient: tx,
+      });
+
+      if (!assignment.available || !assignment.mentor) {
+        const conflictErr = new Error(
+          assignment.reason || "No mentor is available for this time slot. Please choose another time."
+        );
+        conflictErr.statusCode = 409;
+        throw conflictErr;
+      }
+
+      return assignment.mentor;
+    }
+
+    const requestedMentor = await tx.mentor.findFirst({
+      where: { id: mentorId, active: true },
+    });
+
+    const conflictErr = new Error(
+      "Your selected mentor is no longer available for this time. Please choose another mentor or time slot."
+    );
+    conflictErr.statusCode = 409;
+
+    if (!requestedMentor) {
+      throw conflictErr;
+    }
+
+    const mentorTz = requestedMentor.timezone || CONFIG.MENTOR_DEFAULT_TIMEZONE;
+    if (!TimezoneService.isWithinMentorWorkingHours(startUtc, CONFIG.CLASS_DURATION_MINUTES, mentorTz)) {
+      throw conflictErr;
+    }
+
+    const mentorLocalDate = TimezoneService.getMentorLocalDateString(startUtc, mentorTz);
+    const { startOfDayUtc, endOfDayUtc } = TimezoneService.getMentorLocalDayRangeUtc(
+      mentorLocalDate,
+      mentorTz
+    );
+    const dayBookings = await tx.booking.findMany({
+      where: {
+        mentorId: requestedMentor.id,
+        status: { not: "CANCELLED" },
+        startTimeUtc: { gte: startOfDayUtc, lte: endOfDayUtc },
+      },
+    });
+
+    const hasOverlap = dayBookings.some((booking) =>
+      new Date(booking.startTimeUtc) < endUtc && new Date(booking.endTimeUtc) > startUtc
+    );
+    if (hasOverlap || dayBookings.length >= CONFIG.MENTOR_MAX_DAILY_CLASSES) {
+      throw conflictErr;
+    }
+
+    return requestedMentor;
+  }
+
   /**
    * Create a trial class booking atomically
    * @param {Object} payload
@@ -49,53 +109,13 @@ export class BookingService {
 
     // Use Prisma transaction for atomic concurrency / double booking protection
     const result = await prisma.$transaction(async (tx) => {
-      let assignedMentor = null;
-
-      // 1a. If a specific mentor was requested, try to use them first
-      if (payload.mentorId) {
-        const requestedMentor = await tx.mentor.findFirst({
-          where: { id: payload.mentorId, active: true },
-        });
-        if (requestedMentor) {
-          // Verify they are still available for this slot
-          const mentorTz = requestedMentor.timezone || CONFIG.MENTOR_DEFAULT_TIMEZONE;
-          const { startOfDayUtc, endOfDayUtc } = TimezoneService.getMentorLocalDayRangeUtc(
-            TimezoneService.getMentorLocalDateString(startUtc, mentorTz),
-            mentorTz
-          );
-          const dayBookings = await tx.booking.findMany({
-            where: {
-              mentorId: requestedMentor.id,
-              status: { not: "CANCELLED" },
-              startTimeUtc: { gte: startOfDayUtc, lte: endOfDayUtc },
-            },
-          });
-          const hasOverlap = dayBookings.some((b) => {
-            return new Date(b.startTimeUtc) < endUtc && new Date(b.endTimeUtc) > startUtc;
-          });
-          if (!hasOverlap && dayBookings.length < CONFIG.MENTOR_MAX_DAILY_CLASSES) {
-            assignedMentor = requestedMentor;
-          }
-        }
-      }
-
-      // 1b. Fall back to auto-assignment if no mentor requested or requested is unavailable
-      if (!assignedMentor) {
-        const assignment = await MentorAssignmentService.findAvailableMentor({
-          startTimeUtc: startUtc,
-          endTimeUtc: endUtc,
-          dbClient: tx,
-        });
-
-        if (!assignment.available || !assignment.mentor) {
-          const conflictErr = new Error(
-            assignment.reason || "No mentor is available for this time slot. Please choose another time."
-          );
-          conflictErr.statusCode = 409;
-          throw conflictErr;
-        }
-        assignedMentor = assignment.mentor;
-      }
+      // Never silently substitute another mentor after the parent chose one.
+      const assignedMentor = await BookingService.assignMentor({
+        mentorId: payload.mentorId,
+        startUtc,
+        endUtc,
+        tx,
+      });
 
       // 2. Create or find Parent
       let parent = await tx.parent.findFirst({

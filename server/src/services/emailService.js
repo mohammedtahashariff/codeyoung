@@ -94,6 +94,12 @@ class EmailService {
     // account owner's email. In sandbox mode, all emails are redirected to
     // the admin inbox. The subject is kept clean — no email addresses shown.
     const isSandbox = this.fromEmail.includes("onboarding@resend.dev");
+    if (isSandbox && CONFIG.NODE_ENV === "production") {
+      throw new Error(
+        "Resend sandbox sender cannot deliver to parents in production. Verify a sending domain and set RESEND_FROM to its sender address."
+      );
+    }
+
     const adminEmail = CONFIG.RESEND_ADMIN_EMAIL || CONFIG.MENTOR_NOTIFICATION_EMAIL || "tahashariff2@gmail.com";
 
     const body = {

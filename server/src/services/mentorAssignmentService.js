@@ -121,11 +121,12 @@ export class MentorAssignmentService {
     });
 
     if (!activeMentors || activeMentors.length === 0) {
-      return { available: false, count: 0 };
+      return { available: false, count: 0, availableMentors: [] };
     }
 
     let count = 0;
     let previewMentor = null;
+    const availableMentors = [];
 
     for (const mentor of activeMentors) {
       const mentorTz = mentor.timezone || CONFIG.MENTOR_DEFAULT_TIMEZONE;
@@ -163,6 +164,7 @@ export class MentorAssignmentService {
 
       if (!hasOverlap) {
         count++;
+        availableMentors.push({ id: mentor.id, name: mentor.name });
         if (!previewMentor) {
           previewMentor = mentor;
         }
@@ -173,6 +175,7 @@ export class MentorAssignmentService {
       available: count > 0,
       count,
       previewMentor,
+      availableMentors,
     };
   }
 

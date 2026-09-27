@@ -61,6 +61,7 @@ export class AvailabilityService {
           localDisplay: timeLabel,
           mentorDisplay: "Unavailable",
           mentorPreview: null,
+          availableMentors: [],
         });
         continue;
       }
@@ -73,7 +74,7 @@ export class AvailabilityService {
       ) + " IST";
 
       // Let database errors reach the controller instead of reporting false unavailability.
-      const { available, count, previewMentor } = await MentorAssignmentService.getAvailableMentorsCount({
+      const { available, count, previewMentor, availableMentors } = await MentorAssignmentService.getAvailableMentorsCount({
         startTimeUtc: startUtc,
         endTimeUtc: endUtc,
       });
@@ -87,6 +88,7 @@ export class AvailabilityService {
         localDisplay: timeLabel,
         mentorDisplay: mentorTimeDisplay,
         mentorPreview: previewMentor ? { id: previewMentor.id, name: previewMentor.name } : null,
+        availableMentors,
       });
     }
 

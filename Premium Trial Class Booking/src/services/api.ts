@@ -38,6 +38,7 @@ export interface AvailabilitySlot {
   localDisplay: string;
   mentorDisplay: string;
   mentorPreview: { id: string; name: string } | null;
+  availableMentors: Array<{ id: string; name: string }>;
 }
 
 export interface AvailabilityResponse {
