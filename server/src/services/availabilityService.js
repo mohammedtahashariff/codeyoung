@@ -46,38 +46,14 @@ export class AvailabilityService {
     const slots = [];
 
     for (const timeLabel of slotLabels) {
+      let slotTimes;
       try {
-        const { startUtc, endUtc, startUtcIso, endUtcIso } = TimezoneService.parseLocalSlotToUtc(
+        slotTimes = TimezoneService.parseLocalSlotToUtc(
           date,
           timeLabel,
           timezone
         );
-
-        // Format mentor local display time
-        const mentorTimeDisplay = TimezoneService.formatLocalTime(
-          startUtc,
-          CONFIG.MENTOR_DEFAULT_TIMEZONE,
-          "h:mm a"
-        ) + " IST";
-
-        // Query available mentors count for this slot
-        const { available, count, previewMentor } = await MentorAssignmentService.getAvailableMentorsCount({
-          startTimeUtc: startUtc,
-          endTimeUtc: endUtc,
-        });
-
-        slots.push({
-          time: timeLabel,
-          startTimeUtc: startUtcIso,
-          endTimeUtc: endUtcIso,
-          available,
-          remainingMentors: count,
-          localDisplay: timeLabel,
-          mentorDisplay: mentorTimeDisplay,
-          mentorPreview: previewMentor ? { id: previewMentor.id, name: previewMentor.name } : null,
-        });
-      } catch (err) {
-        // Skip unparseable slot
+      } catch {
         slots.push({
           time: timeLabel,
           available: false,
@@ -86,23 +62,43 @@ export class AvailabilityService {
           mentorDisplay: "Unavailable",
           mentorPreview: null,
         });
+        continue;
       }
+
+      const { startUtc, endUtc, startUtcIso, endUtcIso } = slotTimes;
+      const mentorTimeDisplay = TimezoneService.formatLocalTime(
+        startUtc,
+        CONFIG.MENTOR_DEFAULT_TIMEZONE,
+        "h:mm a"
+      ) + " IST";
+
+      // Let database errors reach the controller instead of reporting false unavailability.
+      const { available, count, previewMentor } = await MentorAssignmentService.getAvailableMentorsCount({
+        startTimeUtc: startUtc,
+        endTimeUtc: endUtc,
+      });
+
+      slots.push({
+        time: timeLabel,
+        startTimeUtc: startUtcIso,
+        endTimeUtc: endUtcIso,
+        available,
+        remainingMentors: count,
+        localDisplay: timeLabel,
+        mentorDisplay: mentorTimeDisplay,
+        mentorPreview: previewMentor ? { id: previewMentor.id, name: previewMentor.name } : null,
+      });
     }
 
     // Calculate total daily parent capacity (10 mentors x 2 classes = max 20 parents/day)
-    let dayBookingsCount = 0;
-    try {
-      const { startOfDayUtc, endOfDayUtc } = TimezoneService.getMentorLocalDayRangeUtc(
-        date,
-        CONFIG.MENTOR_DEFAULT_TIMEZONE
-      );
-      dayBookingsCount = await MentorAssignmentService.getDayBookingsCount({
-        startOfDayUtc,
-        endOfDayUtc,
-      });
-    } catch {
-      dayBookingsCount = 0;
-    }
+    const { startOfDayUtc, endOfDayUtc } = TimezoneService.getMentorLocalDayRangeUtc(
+      date,
+      CONFIG.MENTOR_DEFAULT_TIMEZONE
+    );
+    const dayBookingsCount = await MentorAssignmentService.getDayBookingsCount({
+      startOfDayUtc,
+      endOfDayUtc,
+    });
 
     const totalCapacity = CONFIG.TOTAL_PARENT_DAILY_CAPACITY || 20;
     const dt = DateTime.fromISO(date, { zone: timezone });

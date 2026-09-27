@@ -931,8 +931,6 @@ function Progress({ step, onStepClick }: { step: number; onStepClick?: (step: nu
   );
 }
 
-const DEFAULT_TIMES = ["09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM"];
-
 // All 10 mentors in the system
 const MENTORS = [
   { id: "m01-uuid-0001", name: "Alex Johnson", initials: "AJ", specialty: "Game development", rating: "5.0" },
@@ -1348,7 +1346,7 @@ function ChooseTime({
   error: string;
   timezone: string;
   onTimezone: (timezone: string) => void;
-  capacityInfo?: { totalCapacity: number; remainingCapacity: number; bookedCount: number };
+  capacityInfo?: { totalCapacity: number; remainingCapacity: number; bookedCount: number } | null;
 }) {
   const currDate = selectedDate || dates.find((d) => !d.disabled) || dates[0] || {
     id: "2026-09-28",
@@ -1362,17 +1360,10 @@ function ChooseTime({
     today: false,
   };
 
-  const safeSlots = Array.isArray(slots) && slots.length > 0 ? slots : DEFAULT_TIMES.map((t) => ({
-    time: t,
-    available: !currDate.isWeekend,
-    remainingMentors: currDate.isWeekend ? 0 : 10,
-    localDisplay: t,
-    mentorDisplay: "7:30 PM IST",
-    mentorPreview: null,
-  }));
+  const safeSlots = Array.isArray(slots) ? slots : [];
 
   const totalDayCapacity = capacityInfo?.totalCapacity ?? 20;
-  const remainingDaySlots = currDate.isWeekend ? 0 : (capacityInfo?.remainingCapacity ?? 20);
+  const remainingDaySlots = currDate.isWeekend ? 0 : (capacityInfo?.remainingCapacity ?? 0);
   const safeTimezoneStr = (timezone || "America/New_York").replaceAll("_", " ");
 
   return (
@@ -1460,15 +1451,17 @@ function ChooseTime({
                 <strong style={{ fontSize: "15px", color: "var(--ink)", fontFamily: "Manrope", display: "block" }}>
                   {currDate.isWeekend
                     ? "Weekend: 0 of 20 Parent Slots Available (Mentors Offline)"
-                    : `Daily Trial Capacity: ${remainingDaySlots} of ${totalDayCapacity} Parent Slots Remaining`}
+                    : capacityInfo
+                    ? `Daily Trial Capacity: ${remainingDaySlots} of ${totalDayCapacity} Parent Slots Remaining`
+                    : "Live availability is unavailable"}
                 </strong>
                 <span style={{ fontSize: "13px", color: "var(--ink-soft)", display: "block", marginTop: "2px" }}>
-                  Selected: <b>{currDate.full}</b> · {currDate.isWeekend ? "Mentors operate Monday–Friday (10:00 AM – 9:00 PM IST)" : "Max 20 parents per day (10 mentors × 2 slots/day)"}
+                  Selected: <b>{currDate.full}</b> · {currDate.isWeekend ? "Mentors operate Monday–Friday (10:00 AM – 9:00 PM IST)" : capacityInfo ? "Max 20 parents per day (10 mentors × 2 slots/day)" : "The booking service did not return capacity data."}
                 </span>
               </div>
             </div>
             <span style={{ padding: "6px 14px", borderRadius: "20px", background: currDate.isWeekend ? "#fee2e2" : "#ecfdf5", color: currDate.isWeekend ? "#991b1b" : "#065f46", fontWeight: 800, fontSize: "13px" }}>
-              {currDate.isWeekend ? "🔴 Weekend Closed" : remainingDaySlots > 0 ? `🟢 ${remainingDaySlots} Slots Open Today` : "🔴 Fully Booked"}
+              {currDate.isWeekend ? "🔴 Weekend Closed" : !capacityInfo ? (loading ? "Checking…" : "🔴 Unavailable") : remainingDaySlots > 0 ? `🟢 ${remainingDaySlots} Slots Open Today` : "🔴 Fully Booked"}
             </span>
           </div>
           <div className="capacity-bar-track">
@@ -1873,7 +1866,7 @@ function Booking({
   });
 
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
-  const [capacityInfo, setCapacityInfo] = useState({ totalCapacity: 20, remainingCapacity: 20, bookedCount: 0 });
+  const [capacityInfo, setCapacityInfo] = useState<{ totalCapacity: number; remainingCapacity: number; bookedCount: number } | null>(null);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [slotError, setSlotError] = useState("");
   const [bookingError, setBookingError] = useState("");
@@ -1884,6 +1877,8 @@ function Booking({
     let active = true;
     setLoadingSlots(true);
     setSlotError("");
+    setSlots([]);
+    setCapacityInfo(null);
 
     getAvailabilityData(date.id, timezone)
       .then((data) => {
@@ -1899,7 +1894,9 @@ function Booking({
       .catch((err) => {
         if (!active) return;
         console.warn("Could not fetch availability from backend:", err.message);
-        setSlotError("Currently using default available slots.");
+        setSlots([]);
+        setCapacityInfo(null);
+        setSlotError("Live availability could not be loaded. Please refresh or try again later.");
         setLoadingSlots(false);
       });
 

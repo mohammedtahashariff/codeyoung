@@ -14,21 +14,29 @@ describe("ClassLink and Email Service Tests", () => {
   });
 
   it("handles email dispatch errors safely without throwing", async () => {
-    // Attempting to send with invalid or unauthenticated transport shouldn't crash the server
-    const result = await emailService.sendParentConfirmationEmail({
-      parent: { fullName: "Jane Doe", email: "invalid-email-recipient", timezone: "America/New_York" },
-      student: { firstName: "Tim", grade: "Grade 4" },
-      mentor: { name: "Alex", timezone: "Asia/Kolkata" },
-      booking: {
-        id: "test-booking-id",
-        startTimeUtc: new Date(),
-        classLink: "https://live.codeyoung.com/trial/test",
-        parentTimezone: "America/New_York",
-      },
-    });
+    // Stub the transport so tests never send email or depend on API credentials.
+    const originalSend = emailService.send;
+    emailService.send = async () => {
+      throw new Error("simulated email provider failure");
+    };
 
-    // Should return result object (either simulated success or caught error) and NOT throw
-    assert.ok(typeof result === "object");
-    assert.ok("success" in result);
+    try {
+      const result = await emailService.sendParentConfirmationEmail({
+        parent: { fullName: "Jane Doe", email: "jane@example.com", timezone: "America/New_York" },
+        student: { firstName: "Tim", grade: "Grade 4" },
+        mentor: { name: "Alex", timezone: "Asia/Kolkata" },
+        booking: {
+          id: "test-booking-id",
+          startTimeUtc: new Date(),
+          classLink: "https://live.codeyoung.com/trial/test",
+          parentTimezone: "America/New_York",
+        },
+      });
+
+      assert.equal(result.success, false);
+      assert.match(result.error, /simulated email provider failure/);
+    } finally {
+      emailService.send = originalSend;
+    }
   });
 });

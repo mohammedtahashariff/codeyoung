@@ -29,6 +29,16 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Friendly root response for opening the service URL in a browser.
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    success: true,
+    service: "codeyoung-trial-booking-api",
+    message: "API is running. See /api/health for service health.",
+    health: "/api/health",
+  });
+});
+
 // General rate limiter
 app.use("/api", apiRateLimiter);
 

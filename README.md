@@ -35,7 +35,7 @@ A production-ready Trial Class Booking System designed for Codeyoung. This syste
 ## 🛠️ Tech Stack
 
 - **Backend**: Node.js, Express.js
-- **Database & ORM**: PostgreSQL, Prisma ORM
+- **Database & ORM**: SQLite for local development and PostgreSQL for deployment, via Prisma ORM
 - **Validation**: Zod
 - **Timezone Management**: Luxon (with standard IANA timezone handling)
 - **Email Delivery**: Nodemailer
@@ -61,7 +61,8 @@ CODEYOUNG/
 │   └── vite.config.ts
 └── server/                              # Express Backend Service
     ├── prisma/
-    │   ├── schema.prisma                # Prisma PostgreSQL schema
+    │   ├── schema.prisma                # Local SQLite schema
+    │   ├── schema.postgresql.prisma     # PostgreSQL deployment schema
     │   └── seed.js                      # 10 Mentors seed data
     ├── src/
     │   ├── config/
@@ -111,8 +112,8 @@ PORT=5000
 NODE_ENV=development
 CLIENT_URL=http://localhost:5173
 
-# Database Configuration (PostgreSQL)
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/codeyoung_booking?schema=public"
+# Local SQLite database (matches server/prisma/schema.prisma)
+DATABASE_URL="file:./dev.db"
 
 # Mentor Work Configuration
 MENTOR_DEFAULT_TIMEZONE="Asia/Kolkata"
@@ -158,6 +159,8 @@ npx prisma db push
 # Seed 10 active mentors
 node prisma/seed.js
 ```
+
+For a PostgreSQL deployment such as Render, configure `DATABASE_URL` with the PostgreSQL connection string and use `npm run prisma:generate:postgres` so Prisma generates from `prisma/schema.postgresql.prisma`. Apply the PostgreSQL schema once with `npm run prisma:push:postgres` before seeding. Do not use the local SQLite URL for a production database.
 
 ### 3. Running the Application
 
@@ -302,8 +305,12 @@ Test coverage includes:
 1. **Instant Representation**: All bookings are stored in PostgreSQL using UTC timestamps (`startTimeUtc` and `endTimeUtc`).
 2. **Mentor Local Date Evaluation**: To evaluate if a mentor has conducted >= 2 classes, the UTC start time is projected into the mentor's local timezone (`Asia/Kolkata`). The start of day (`00:00:00 IST`) and end of day (`23:59:59 IST`) are computed in UTC, ensuring mentors never conduct more than 2 classes in their own calendar day, regardless of parent timezones.
 3. **Automatic Assignment & Concurrency**: The assignment engine runs inside a `prisma.$transaction`. It filters eligible mentors by working hours, checks current day capacity, checks for overlapping bookings, selects the mentor with the lowest load, and commits the booking atomically.
-#   c o d e y o u n g  
- #   c o d e y o u n g  
- #   c o d e y o u n g  
- #   c o d e y o u n g  
+#   c o d e y o u n g 
+ 
+ #   c o d e y o u n g 
+ 
+ #   c o d e y o u n g 
+ 
+ #   c o d e y o u n g 
+ 
  
