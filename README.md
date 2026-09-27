@@ -64,31 +64,58 @@ Families can book a free, 45-minute coding trial for a learner. The interface wa
   <img src="Premium%20Trial%20Class%20Booking/public/mentor.jpg" alt="Codeyoung coding mentor shown in the live application" width="280" />
 </p>
 
-These are the screenshots you uploaded for the project. Select any image to open it at full size.
+These are the screenshots you uploaded for the project. Each uses the same HTML `<img>` approach as the mentor image above; select an image to open it at full size.
 
-| Home · Light theme | Home · Dark theme |
-|:--:|:--:|
-| [![Codeyoung home page in light theme](./Premium%20Trial%20Class%20Booking/public/light.jpg)](./Premium%20Trial%20Class%20Booking/public/light.jpg) | [![Codeyoung home page in dark theme](./Premium%20Trial%20Class%20Booking/public/dark.jpg)](./Premium%20Trial%20Class%20Booking/public/dark.jpg) |
-
-| Booking assistant | General chat |
-|:--:|:--:|
-| [![Booking assistant](./Premium%20Trial%20Class%20Booking/public/chatbot.jpg)](./Premium%20Trial%20Class%20Booking/public/chatbot.jpg) | [![General chat](./Premium%20Trial%20Class%20Booking/public/chatbot1.jpg)](./Premium%20Trial%20Class%20Booking/public/chatbot1.jpg) |
-
-| Student details | Parent details |
-|:--:|:--:|
-| [![Student details](./Premium%20Trial%20Class%20Booking/public/student.jpg)](./Premium%20Trial%20Class%20Booking/public/student.jpg) | [![Parent details](./Premium%20Trial%20Class%20Booking/public/parent.jpg)](./Premium%20Trial%20Class%20Booking/public/parent.jpg) |
-
-| Date, timezone & available times | Booking review |
-|:--:|:--:|
-| [![Available dates and times](./Premium%20Trial%20Class%20Booking/public/time.jpg)](./Premium%20Trial%20Class%20Booking/public/time.jpg) | [![Booking review](./Premium%20Trial%20Class%20Booking/public/draft.jpg)](./Premium%20Trial%20Class%20Booking/public/draft.jpg) |
-
-| Booking confirmation | Parent confirmation email |
-|:--:|:--:|
-| [![Booking confirmation](./Premium%20Trial%20Class%20Booking/public/conform.jpg)](./Premium%20Trial%20Class%20Booking/public/conform.jpg) | [![Parent confirmation email](./Premium%20Trial%20Class%20Booking/public/parent%20mail.jpg)](./Premium%20Trial%20Class%20Booking/public/parent%20mail.jpg) |
-
-| Mentor notification email | |
-|:--:|:--:|
-| [![Mentor notification email](./Premium%20Trial%20Class%20Booking/public/mentor%20mail.jpg)](./Premium%20Trial%20Class%20Booking/public/mentor%20mail.jpg) | |
+<table>
+  <tr>
+    <th>Home · Light theme</th>
+    <th>Home · Dark theme</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/light.jpg"><img src="Premium%20Trial%20Class%20Booking/public/light.jpg" alt="Codeyoung home page in light theme" width="100%" /></a></td>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/dark.jpg"><img src="Premium%20Trial%20Class%20Booking/public/dark.jpg" alt="Codeyoung home page in dark theme" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <th>Booking assistant</th>
+    <th>General chat</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/chatbot.jpg"><img src="Premium%20Trial%20Class%20Booking/public/chatbot.jpg" alt="Booking assistant" width="100%" /></a></td>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/chatbot1.jpg"><img src="Premium%20Trial%20Class%20Booking/public/chatbot1.jpg" alt="General chat" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <th>Student details</th>
+    <th>Parent details</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/student.jpg"><img src="Premium%20Trial%20Class%20Booking/public/student.jpg" alt="Student details" width="100%" /></a></td>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/parent.jpg"><img src="Premium%20Trial%20Class%20Booking/public/parent.jpg" alt="Parent details" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <th>Date, timezone &amp; available times</th>
+    <th>Booking review</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/time.jpg"><img src="Premium%20Trial%20Class%20Booking/public/time.jpg" alt="Available dates and times" width="100%" /></a></td>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/draft.jpg"><img src="Premium%20Trial%20Class%20Booking/public/draft.jpg" alt="Booking review" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <th>Booking confirmation</th>
+    <th>Parent confirmation email</th>
+  </tr>
+  <tr>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/conform.jpg"><img src="Premium%20Trial%20Class%20Booking/public/conform.jpg" alt="Booking confirmation" width="100%" /></a></td>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/parent%20mail.jpg"><img src="Premium%20Trial%20Class%20Booking/public/parent%20mail.jpg" alt="Parent confirmation email" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <th>Mentor notification email</th>
+    <th></th>
+  </tr>
+  <tr>
+    <td align="center"><a href="Premium%20Trial%20Class%20Booking/public/mentor%20mail.jpg"><img src="Premium%20Trial%20Class%20Booking/public/mentor%20mail.jpg" alt="Mentor notification email" width="100%" /></a></td>
+    <td></td>
+  </tr>
+</table>
 
 The image files are stored in `Premium Trial Class Booking/public/`. Before making the repository public, check that the email and booking screenshots contain only safe demo data and no private addresses or real booking details.
 
