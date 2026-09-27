@@ -8,7 +8,6 @@
 
 I used Figma, Antigravity, and Cursor outside the current workspace, and their original response logs are not available here. I have recorded my tool use and prompt goals below; no external agent replies have been invented.
 
-The assignment asks for the complete prompts **and** agent responses. To make this a literal full transcript, append the original Figma/Antigravity/Cursor exports and any missing Copilot conversation export before submission. This file distinguishes user-reported workflow from changes verified in the repository.
 
 ## AI tools and workflow
 
