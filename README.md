@@ -64,22 +64,36 @@ Families can book a free, 45-minute coding trial for a learner. The interface wa
   <img src="Premium%20Trial%20Class%20Booking/public/mentor.jpg" alt="Codeyoung coding mentor shown in the live application" width="280" />
 </p>
 
-These are real screenshots captured from the running application. Select an image to open it at full size.
+These are the screenshots you uploaded for the project. Select any image to open it at full size.
 
 <table>
   <tr>
-    <td width="50%"><strong>Home · Light theme</strong><br /><a href="docs/screenshots/landing-light.png"><img src="docs/screenshots/landing-light.png" alt="Codeyoung home page in light theme" width="100%" /></a></td>
-    <td width="50%"><strong>Home · Dark theme</strong><br /><a href="docs/screenshots/landing-dark.png"><img src="docs/screenshots/landing-dark.png" alt="Codeyoung home page in dark theme" width="100%" /></a></td>
+    <td width="50%"><strong>Home · Light theme</strong><br /><a href="docs/screenshots/landing-light.jpg"><img src="docs/screenshots/landing-light.jpg" alt="Codeyoung home page in light theme" width="100%" /></a></td>
+    <td width="50%"><strong>Home · Dark theme</strong><br /><a href="docs/screenshots/landing-dark.jpg"><img src="docs/screenshots/landing-dark.jpg" alt="Codeyoung home page in dark theme" width="100%" /></a></td>
   </tr>
   <tr>
-    <td width="50%"><strong>Booking assistant</strong><br /><a href="docs/screenshots/booking-assistant.png"><img src="docs/screenshots/booking-assistant.png" alt="Booking assistant open on the Codeyoung home page" width="100%" /></a></td>
-    <td width="50%"><strong>General chat</strong><br /><a href="docs/screenshots/general-chat.png"><img src="docs/screenshots/general-chat.png" alt="General chat mode open on the Codeyoung home page" width="100%" /></a></td>
+    <td width="50%"><strong>Booking assistant</strong><br /><a href="docs/screenshots/booking-assistant.jpg"><img src="docs/screenshots/booking-assistant.jpg" alt="Booking assistant open on the Codeyoung home page" width="100%" /></a></td>
+    <td width="50%"><strong>General chat</strong><br /><a href="docs/screenshots/general-chat.jpg"><img src="docs/screenshots/general-chat.jpg" alt="General chat mode open on the Codeyoung home page" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <td width="50%"><strong>Learner details</strong><br /><a href="docs/screenshots/student-details.jpg"><img src="docs/screenshots/student-details.jpg" alt="Learner details in the trial booking flow" width="100%" /></a></td>
+    <td width="50%"><strong>Parent details</strong><br /><a href="docs/screenshots/parent-details.jpg"><img src="docs/screenshots/parent-details.jpg" alt="Parent details in the trial booking flow" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <td width="50%"><strong>Date, timezone & available times</strong><br /><a href="docs/screenshots/booking-availability.jpg"><img src="docs/screenshots/booking-availability.jpg" alt="Date, timezone, and available trial times" width="100%" /></a></td>
+    <td width="50%"><strong>Booking review</strong><br /><a href="docs/screenshots/booking-review.jpg"><img src="docs/screenshots/booking-review.jpg" alt="Trial booking review before confirmation" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <td width="50%"><strong>Booking confirmation</strong><br /><a href="docs/screenshots/booking-confirmation.jpg"><img src="docs/screenshots/booking-confirmation.jpg" alt="Confirmed Codeyoung trial booking" width="100%" /></a></td>
+    <td width="50%"><strong>Parent confirmation email</strong><br /><a href="docs/screenshots/parent-confirmation-email.jpg"><img src="docs/screenshots/parent-confirmation-email.jpg" alt="Parent trial confirmation email" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <td width="50%"><strong>Mentor notification email</strong><br /><a href="docs/screenshots/mentor-notification-email.jpg"><img src="docs/screenshots/mentor-notification-email.jpg" alt="Mentor booking notification email" width="100%" /></a></td>
+    <td width="50%"></td>
   </tr>
 </table>
 
-More booking-flow and email screenshots can be added under [`docs/screenshots/`](docs/screenshots/) using the filenames below. Keeping the actual image files in the repository makes the gallery render on GitHub and in cloned copies.
-
-**Recommended gallery:** home (light/dark), booking assistant, general chat, learner details, availability, mentor selection, confirmation, and parent/mentor email previews. Crop out personal information, booking IDs, and all credentials before committing.
+The files are stored in `docs/screenshots/`, so the gallery works in GitHub and in cloned copies of the repository. Before making the repository public, check that the email and booking screenshots contain only safe demo data and no private addresses or real booking details.
 
 ## Architecture
 
