@@ -164,6 +164,45 @@ The 25 server tests were grouped as follows:
 - **Timezone and DST (6):** validate IANA zones; convert New York during EDT and EST; handle London BST/GMT; calculate mentor-local day across a date boundary; enforce mentor hours/weekdays.
 - **Request validation (6):** accept valid payloads; allow omitted student email; reject invalid parent email; reject invalid/manual-offset timezones; accept valid availability query parameters; reject invalid date/timezone query parameters.
 
+### Exact test cases in the repository
+
+The names below are transcribed from the current `server/tests/` files:
+
+**`bookingService.test.js`**
+- “keeps the exact requested mentor when available”
+- “rejects an unavailable requested mentor rather than substituting another”
+- “rejects the requested mentor outside their working hours”
+
+**`emailAndClassLink.test.js`**
+- “generates unique live-class links for different bookings”
+- “handles email dispatch errors safely without throwing”
+- “refuses to silently redirect production parent email through the Resend sandbox”
+- “sends production email directly to the requested parent with a verified sender”
+- “uses separate parent and mentor Resend credentials and sender identities”
+
+**`mentorAssignment.test.js`**
+- “automatically assigns an active mentor during working hours”
+- “returns exact available mentor IDs for the selected time”
+- “prevents overlapping bookings for the same mentor”
+- “enforces maximum 2 trial classes per mentor per local calendar day”
+- “returns no availability when slot is outside mentor working hours”
+
+**`timezone.test.js`**
+- “validates correct and incorrect IANA timezones”
+- “correctly converts parent time in America/New_York to UTC during Daylight Saving Time (EDT, UTC-4)”
+- “correctly converts parent time in America/New_York to UTC during Standard Time (EST, UTC-5)”
+- “correctly handles Europe/London DST changes (BST UTC+1 vs GMT UTC+0)”
+- “calculates mentor local calendar day accurately across day boundaries”
+- “enforces mentor working hours (10:00 AM to 9:00 PM Asia/Kolkata, Monday-Friday)”
+
+**`validation.test.js`**
+- “validates successful booking payload with required parent and student data”
+- “passes when student email is omitted (student email is optional)”
+- “rejects when parent email is missing or invalid”
+- “rejects when timezone is invalid or manual offset”
+- “validates availability query params with valid date and timezone”
+- “rejects availability query params with invalid date format or timezone”
+
 ## Raw session exports still needed for the assignment
 
 Before submission, append the original prompt-and-response exports for Figma, Antigravity, Cursor, and any Copilot sessions not already included. This reconstructed record intentionally does not claim to be a complete verbatim export where source logs were unavailable.
