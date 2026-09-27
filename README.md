@@ -104,7 +104,16 @@ CODEYOUNG/
 
 ## ⚙️ Environment Variables
 
-Create `server/.env` (referencing `server/.env.example`):
+For local development, copy `server/.env.example` to `server/.env`. For production, use the safe templates `server/.env.production.example` and `Premium Trial Class Booking/.env.example` as references, then enter values in the Render and Vercel environment-variable dashboards. **Never commit actual `.env` files or real credentials.**
+
+### Production environment settings
+
+- **Render backend:** use `NODE_ENV=production`, set `CLIENT_URL` to the deployed Vercel site URL, and set `DATABASE_URL` to the Render PostgreSQL connection string. Configure Prisma with `npm run prisma:generate:postgres` in the build command. `PORT` is provided by Render. Set a new `RESEND_API_KEY` only in Render's private environment settings; use a sender address verified with Resend for production email delivery.
+- **Vercel frontend:** set `VITE_API_BASE_URL` to `https://codeyoung.onrender.com/api` in the Vercel project's Environment Variables, then redeploy.
+
+Do not copy placeholder values from the production template into a live service. Do not run database schema-push or seed commands against a database with existing booking data without first confirming the schema and taking a backup.
+
+Local development example (`server/.env`):
 
 ```env
 # Server Configuration
