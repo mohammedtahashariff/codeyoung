@@ -6,36 +6,36 @@
 
 ## Transcript note
 
-The Figma, Antigravity, and Cursor sessions were performed outside the current workspace, and their original response logs were not supplied here. Their use and prompt goals below are recorded from the project owner's description. No external agent replies have been invented.
+I used Figma, Antigravity, and Cursor outside the current workspace, and their original response logs are not available here. I have recorded my tool use and prompt goals below; no external agent replies have been invented.
 
 The assignment asks for the complete prompts **and** agent responses. To make this a literal full transcript, append the original Figma/Antigravity/Cursor exports and any missing Copilot conversation export before submission. This file distinguishes user-reported workflow from changes verified in the repository.
 
 ## AI tools and workflow
 
-1. **Figma — UI/UX design.** The project owner reports designing the interface in Figma using the supplied design brief.
-2. **Google Antigravity — implementation assistance.** The owner reports providing the full-stack implementation brief to Antigravity.
-3. **Cursor — implementation assistance.** The owner reports also using Cursor with the full-stack brief. The owner later said usage credits for Antigravity and Cursor ran out.
+1. **Figma — UI/UX design.** I designed the interface in Figma using the supplied design brief.
+2. **Google Antigravity — implementation assistance.** I provided Antigravity with the full-stack implementation brief.
+3. **Cursor — implementation assistance.** I also used Cursor with the full-stack brief. I ran out of usage credits for both Antigravity and Cursor, so I continued with GitHub Copilot.
 4. **GitHub Copilot — continued implementation.** Copilot was used to continue work on the existing repository, add the chatbot modes, make README/screenshot updates, and verify the code with the available build and test commands.
 
-> The tool sequence and Figma/Antigravity/Cursor usage above are user-reported. The repository does not include their raw session exports, so exact prompts, model replies, and dates for those tools cannot be independently reproduced here.
+> The Figma/Antigravity/Cursor workflow above is my account of how I used those tools. Their raw session exports are not in this repository, so exact prompts, replies, and dates for those sessions cannot be reproduced here.
 
 ## Prompt record
 
-The following records summarize the prompt briefs supplied during the project. They are **summaries**, not claimed verbatim exports.
+The following records summarize the prompt briefs I supplied during the project. They are **summaries**, not claimed verbatim exports.
 
-### Prompt 1 — Figma UI/UX design brief (user-provided)
+### Prompt 1 — Figma UI/UX design brief (my prompt, summarized)
 
 Create a premium, parent-focused Codeyoung booking experience while preserving the existing purple/lavender identity, typography, rounded cards, whitespace, and booking layout. The brief calls for a minimal navigation and a welcoming landing hero, followed by a clear sequence for time selection, learner and parent details, review, mentor matching, confirmation, and joining a demo class. Specify the booking progress indicator, date and slot states, local-time/timezone presentation, booking summary, required guardian email, optional student email, form validation, loading/empty/error/success states, and join/copy-link actions. Include dedicated light and dark themes, a 1440/1280/768/390 responsive layout, accessible reduced-motion behavior, polished component states, and restrained 120–700 ms motion. Avoid replacing the product with a generic SaaS dashboard, excessive glass effects, or an unrelated visual concept.
 
-**Outcome recorded by owner:** the UI/UX was designed in Figma and supplied as the existing frontend foundation. The exact Figma-generated screens and assistant response are not included as a raw export in this repository.
+**My outcome:** I designed the UI/UX in Figma and supplied it as the existing frontend foundation. The original Figma response/export is not included in this repository.
 
-### Prompt 2 — Antigravity and Cursor full-stack brief (user-provided)
+### Prompt 2 — Antigravity and Cursor full-stack brief (my prompt, summarized)
 
 Work in the existing React application rather than rebuilding it. Keep routes, controllers, services, validators, Prisma, and configuration modular. The brief requests a Node.js/Express REST API; Mentor, Parent, Student, and Booking models; ten demo mentors; local SQLite plus a PostgreSQL schema; Zod validation; Luxon/IANA timezone conversion with UTC persistence; configurable India mentor work hours; a two-booking per mentor-local-day limit; overlap and double-booking checks; unique demo class links; parent and mentor emails; safe errors; environment templates; seed scripts; tests; and API/setup documentation. It specifically calls out required parent email, optional student email, US/UK DST, final booking rechecks, non-fatal email failures, and connecting the existing screens to real API responses without redesigning them.
 
-**Outcome recorded by owner:** this brief was used with Antigravity and Cursor before their usage credits ran out. Their exact responses and file-by-file contribution history were not supplied, so this record does not attribute specific code changes to either tool.
+**My outcome:** I used this brief with Antigravity and Cursor before running out of credits. I do not have their exact responses or a file-by-file contribution history, so I have not attributed specific code changes to either tool.
 
-### Prompt 3 — GitHub Copilot chatbot/full-stack brief (user-provided)
+### Prompt 3 — GitHub Copilot chatbot/full-stack brief (my prompt, summarized)
 
 Build a functional booking assistant inside the existing Codeyoung UI—not a standalone redesign or a fake static chat. The pasted prompt asks the assistant to be the main booking entry point: open it from the floating launcher and existing “Book a Free Trial” CTA; keep a five-stage booking state; collect/validate student and guardian details; request live availability in an IANA timezone; let the family choose date/time; show a mentor returned or previewed by backend availability; preserve details when changing time; review and explicitly confirm; submit the actual booking; and display the real response ID/class link. It also specifies 409/no-mentor/error handling, mobile behavior, email trigger, session handling, security, and end-to-end tests. It allows a structured conversational state machine instead of an LLM, but forbids made-up slots, mentors, or booking confirmations.
 
@@ -61,43 +61,43 @@ This section records the important prompt → response/action pairs from the ava
 
 ### A. Inspect and integrate the existing chatbot
 
-**User prompt (summary):** “Make [the chatbot] appear in the right bottom corner when clicked.”
+**My prompt (summary):** “Make the chatbot appear in the bottom-right corner when clicked.”
 
 **Copilot response/action:** Located the existing `DemoChatbotWidget` in `Premium Trial Class Booking/src/App.tsx`. Rather than create another chatbot, retained its existing booking flow, added a round fixed-position launcher, and styled the open panel above it in `src/index.css`.
 
-**User follow-up:** “not came”.
+**My follow-up:** “It did not appear.”
 
 **Copilot response/action:** Traced the visibility issue to the widget being nested inside the landing page, which uses clipping/animation styles. Moved the widget to a sibling of the page container so its fixed position could render, then opened the app in the integrated browser and verified that the launcher appeared and opened the assistant.
 
 ### B. Split booking and general conversation
 
-**User prompt (summary):** Add one option for booking and another for general conversation.
+**My prompt (summary):** Add one option for booking and another for general conversation.
 
 **Copilot response/action:** Added a `mode` state with `booking` and `general` values, separate message histories, and a two-button bottom navigation. Booking mode retains the existing details/time/mentor/review/confirmed stages. General chat has a free-text input and popular-question buttons. The general responses use local keyword matching for price, age/programs, mentor, schedule, timezone, preparation, beginner experience, and class format; no external LLM is called.
 
-**User follow-up:** Add more details for normal chat.
+**My follow-up:** Add more details for General chat.
 
 **Copilot response/action:** Expanded those deterministic replies and added quick questions for trial details, age groups, preparation, and booking. A browser check sent trial, preparation, and booking questions, observed the corresponding answers, and switched back to Booking successfully.
 
 ### C. Apply the supplied logo
 
-**User prompts (summary):** Use the supplied logo in the site brand and browser tab/address area.
+**My prompts (summary):** Use the supplied logo in the site brand and browser tab/address area.
 
 **Copilot response/action:** Replaced the shared brand’s code glyph with an SVG recreation of the uploaded yellow/orange mark, added `public/favicon.svg`, and registered that SVG as the Vite favicon in `Premium Trial Class Booking/index.html`. The production frontend build succeeded.
 
 ### D. Rework README and use the uploaded project screenshots
 
-**User prompts (summary):** Make the README impressive for the assignment, include the live URL, use the uploaded images, remove the mentor photo, and use the same image embedding style as the mentor image.
+**My prompts (summary):** Make the README impressive for the assignment, include the live URL, use the uploaded images, remove the mentor photo, and use the same image-embedding style as the mentor image.
 
 **Copilot response/action:** Rewrote the project README with product overview, journey, architecture, setup, API, tests, deployment, submission instructions, and a screenshot gallery. After the user showed that the first gallery links rendered as broken in their preview, searched the repository, found the uploaded `light.jpg`, `dark.jpg`, `chatbot.jpg`, `chatbot1.jpg`, `student.jpg`, `parent.jpg`, `time.jpg`, `draft.jpg`, `conform.jpg`, `parent mail.jpg`, and `mentor mail.jpg` under the generated `dist/` folder, and copied them into `Premium Trial Class Booking/public/`. Updated the gallery to use HTML `<img>` tags with encoded spaces, matching the mentor-image pattern. Removed the separate mentor-photo block when asked. Confirmed that every linked public image exists locally.
 
-**User follow-up:** Remove the mentor photo from the README.
+**My follow-up:** Remove the mentor photo from the README.
 
 **Copilot response/action:** Removed the standalone mentor `<img>` and changed the gallery introduction so it no longer referred to that image.
 
 ### E. Make this transcript accurate
 
-**User prompt (summary):** Record Figma for UI/UX, Antigravity and Cursor for implementation prompts, and GitHub Copilot for the chatbot; mention the supplied design/full-stack/chatbot prompts.
+**My prompt (summary):** Record my use of Figma for UI/UX, Antigravity and Cursor for implementation prompts, and GitHub Copilot for the chatbot; mention the supplied design/full-stack/chatbot prompts.
 
 **Copilot response/action:** Replaced the old backend-only summary, which inaccurately described the local SQLite schema as PostgreSQL and overstated frontend integration, with this tool-use record. External tool activity is explicitly identified as user-reported; Copilot changes and project behavior are separated as repository-verified facts.
 
