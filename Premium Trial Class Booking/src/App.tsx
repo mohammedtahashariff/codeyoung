@@ -7,6 +7,8 @@ import {
   type BookingResult,
 } from "./services/api";
 
+const MENTOR_IMAGE_URL = `${import.meta.env.BASE_URL}mentor.jpg`;
+
 type IconName =
   | "arrow"
   | "calendar"
@@ -169,7 +171,7 @@ function HeroVisual() {
 
       {/* Pointing Mentor with organic curved backdrop */}
       <div className="mentor-cutout-wrap">
-        <img src="/mentor.jpg" alt="Alex, Coding Mentor" className="mentor-cutout-img" />
+        <img src={MENTOR_IMAGE_URL} alt="Alex, Coding Mentor" className="mentor-cutout-img" />
       </div>
 
       {/* Center Frosted Glass Code Card */}
@@ -197,7 +199,7 @@ function HeroVisual() {
       {/* Floating Mentor Info Pill */}
       <div className="floating-mentor-card">
         <div className="mentor-thumb-avatar">
-          <img src="/mentor.jpg" alt="Alex" />
+          <img src={MENTOR_IMAGE_URL} alt="Alex" />
           <span className="online-dot" />
         </div>
         <div>
