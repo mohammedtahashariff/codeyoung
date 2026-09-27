@@ -60,11 +60,7 @@ Families can book a free, 45-minute coding trial for a learner. The interface wa
 
 ## Visual preview and screenshots
 
-<p align="center">
-  <img  alt="Codeyoung coding mentor shown in the live application" width="280" />
-</p>
-
-These are the screenshots you uploaded for the project. Each uses the same HTML `<img>` approach as the mentor image above; select an image to open it at full size.
+These are the screenshots you uploaded for the project. Select an image to open it at full size.
 
 <table>
   <tr>
