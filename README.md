@@ -68,17 +68,6 @@ The application screenshots shown in the assignment are not yet available as fil
 
 **Recommended gallery:** home (light/dark), booking assistant, general chat, learner details, availability, mentor selection, confirmation, and parent/mentor email previews. Crop out personal information, booking IDs, and all credentials before committing.
 
-| Screenshot | Filename to upload |
-|---|---|
-| Home — light theme | `docs/screenshots/landing-light.png` |
-| Home — dark theme | `docs/screenshots/landing-dark.png` |
-| Booking assistant | `docs/screenshots/booking-assistant.png` |
-| General chat | `docs/screenshots/general-chat.png` |
-| Learner / parent details | `docs/screenshots/booking-details.png` |
-| Date, timezone, and slots | `docs/screenshots/booking-availability.png` |
-| Mentor choice and confirmation | `docs/screenshots/booking-mentors.png`, `docs/screenshots/booking-confirmation.png` |
-| Email previews | `docs/screenshots/parent-confirmation-email.png`, `docs/screenshots/mentor-notification-email.png` |
-
 ## Architecture
 
 ```mermaid
@@ -232,17 +221,3 @@ Do not run schema-push or seed commands against a database containing important 
 The submitted frontend is available at [https://codeyoungassessment.vercel.app/](https://codeyoungassessment.vercel.app/). The frontend API base can be overridden with `VITE_API_BASE_URL`; production deployments should point it to the deployed backend’s `/api` URL and then rebuild/redeploy the frontend.
 
 For a backend deployment, configure `DATABASE_URL`, `CLIENT_URL`, `NODE_ENV`, and `PORT` in the hosting provider. Generate Prisma using the schema that matches the selected database. Configure a verified email sender and private credentials only when email delivery is required.
-
-## Assignment submission
-
-1. Push the project to GitHub and submit the repository URL alongside the live application link above.
-2. Add the screenshots to `docs/screenshots/` and include them in this README using the filenames in the gallery table.
-3. Include the complete AI-session transcript as `TRANSCRIPT.md`. The current file is an implementation summary; append or replace it with the full prompt-and-response export required by the assignment before submitting.
-4. Email both links to **campus.ka@talentiseglobal.com** by **28 September 2026, 6:00 PM**.
-5. Use the subject: **Codeyoung Assignment Task - `<Candidate Name>` - `<Institute Name (ABBR)>`**.
-
-> **Before publishing:** scan the repository for `.env` files, API keys, booking details, and private email addresses. Keep secrets out of GitHub; configure production credentials only in the hosting provider’s private environment settings.
-
-## AI-assisted development
-
-The repository includes [`TRANSCRIPT.md`](TRANSCRIPT.md) for the assignment’s AI-session record. Keep the final transcript complete and unedited when exporting it, so it contains both the prompts and the assistant responses.
