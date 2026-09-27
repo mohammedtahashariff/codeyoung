@@ -44,7 +44,17 @@ describe("ClassLink and Email Service Tests", () => {
   it("refuses to silently redirect production parent email through the Resend sandbox", async () => {
     const originalNodeEnv = CONFIG.NODE_ENV;
     const originalFromEmail = emailService.fromEmail;
+    const originalParentFromEmail = CONFIG.PARENT_RESEND_FROM;
+    const originalResendFrom = CONFIG.RESEND_FROM;
+    const originalParentApiKey = CONFIG.PARENT_RESEND_API_KEY;
+    const originalApiKey = CONFIG.RESEND_API_KEY;
+    const originalParentServiceFrom = emailService.parentFromEmail;
     CONFIG.NODE_ENV = "production";
+    CONFIG.PARENT_RESEND_API_KEY = "";
+    CONFIG.RESEND_API_KEY = "";
+    CONFIG.PARENT_RESEND_FROM = "Codeyoung <onboarding@resend.dev>";
+    CONFIG.RESEND_FROM = "Codeyoung <onboarding@resend.dev>";
+    emailService.parentFromEmail = CONFIG.PARENT_RESEND_FROM;
     emailService.fromEmail = "Codeyoung <onboarding@resend.dev>";
 
     try {
@@ -59,6 +69,11 @@ describe("ClassLink and Email Service Tests", () => {
       );
     } finally {
       CONFIG.NODE_ENV = originalNodeEnv;
+      CONFIG.PARENT_RESEND_FROM = originalParentFromEmail;
+      CONFIG.RESEND_FROM = originalResendFrom;
+      CONFIG.PARENT_RESEND_API_KEY = originalParentApiKey;
+      CONFIG.RESEND_API_KEY = originalApiKey;
+      emailService.parentFromEmail = originalParentServiceFrom;
       emailService.fromEmail = originalFromEmail;
     }
   });
@@ -66,12 +81,20 @@ describe("ClassLink and Email Service Tests", () => {
   it("sends production email directly to the requested parent with a verified sender", async () => {
     const originalNodeEnv = CONFIG.NODE_ENV;
     const originalFromEmail = emailService.fromEmail;
+    const originalParentFromEmail = CONFIG.PARENT_RESEND_FROM;
+    const originalResendFrom = CONFIG.RESEND_FROM;
+    const originalParentServiceFrom = emailService.parentFromEmail;
+    const originalParentApiKey = CONFIG.PARENT_RESEND_API_KEY;
     const originalApiKey = CONFIG.RESEND_API_KEY;
     const originalFetch = globalThis.fetch;
     let requestBody;
 
     CONFIG.NODE_ENV = "production";
+    CONFIG.PARENT_RESEND_API_KEY = "";
     CONFIG.RESEND_API_KEY = "test-resend-key";
+    CONFIG.PARENT_RESEND_FROM = "";
+    CONFIG.RESEND_FROM = "";
+    emailService.parentFromEmail = "Codeyoung <bookings@example.com>";
     emailService.fromEmail = "Codeyoung <bookings@example.com>";
     globalThis.fetch = async (_url, options) => {
       requestBody = JSON.parse(options.body);
@@ -92,6 +115,10 @@ describe("ClassLink and Email Service Tests", () => {
     } finally {
       CONFIG.NODE_ENV = originalNodeEnv;
       CONFIG.RESEND_API_KEY = originalApiKey;
+      CONFIG.PARENT_RESEND_API_KEY = originalParentApiKey;
+      CONFIG.PARENT_RESEND_FROM = originalParentFromEmail;
+      CONFIG.RESEND_FROM = originalResendFrom;
+      emailService.parentFromEmail = originalParentServiceFrom;
       emailService.fromEmail = originalFromEmail;
       globalThis.fetch = originalFetch;
     }
