@@ -64,7 +64,20 @@ Families can book a free, 45-minute coding trial for a learner. The interface wa
   <img src="Premium%20Trial%20Class%20Booking/public/mentor.jpg" alt="Codeyoung coding mentor shown in the live application" width="280" />
 </p>
 
-The application screenshots shown in the assignment are not yet available as files in this repository. Add them to [`docs/screenshots/`](docs/screenshots/) using the suggested filenames in that folder, then embed them here with Markdown such as `![Home page — light theme](docs/screenshots/landing-light.png)`. Keeping the real screenshots in the repo makes them render reliably on GitHub (and in a cloned copy of the project).
+These are real screenshots captured from the running application. Select an image to open it at full size.
+
+<table>
+  <tr>
+    <td width="50%"><strong>Home · Light theme</strong><br /><a href="docs/screenshots/landing-light.png"><img src="docs/screenshots/landing-light.png" alt="Codeyoung home page in light theme" width="100%" /></a></td>
+    <td width="50%"><strong>Home · Dark theme</strong><br /><a href="docs/screenshots/landing-dark.png"><img src="docs/screenshots/landing-dark.png" alt="Codeyoung home page in dark theme" width="100%" /></a></td>
+  </tr>
+  <tr>
+    <td width="50%"><strong>Booking assistant</strong><br /><a href="docs/screenshots/booking-assistant.png"><img src="docs/screenshots/booking-assistant.png" alt="Booking assistant open on the Codeyoung home page" width="100%" /></a></td>
+    <td width="50%"><strong>General chat</strong><br /><a href="docs/screenshots/general-chat.png"><img src="docs/screenshots/general-chat.png" alt="General chat mode open on the Codeyoung home page" width="100%" /></a></td>
+  </tr>
+</table>
+
+More booking-flow and email screenshots can be added under [`docs/screenshots/`](docs/screenshots/) using the filenames below. Keeping the actual image files in the repository makes the gallery render on GitHub and in cloned copies.
 
 **Recommended gallery:** home (light/dark), booking assistant, general chat, learner details, availability, mentor selection, confirmation, and parent/mentor email previews. Crop out personal information, booking IDs, and all credentials before committing.
 
