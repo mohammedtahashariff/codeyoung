@@ -20,7 +20,11 @@ export const CONFIG = {
   GMAIL_APP_PASSWORD: process.env.GMAIL_APP_PASSWORD || "",
   MENTOR_NOTIFICATION_EMAIL: process.env.MENTOR_NOTIFICATION_EMAIL || "tahashariff2@gmail.com",
 
-  // Email Config — Resend API (fallback / if no Gmail configured)
+  // Email Config — Resend API (supports separate parent and mentor senders)
+  PARENT_RESEND_API_KEY: process.env.PARENT_RESEND_API_KEY || process.env.RESEND_API_KEY,
+  PARENT_RESEND_FROM: process.env.PARENT_RESEND_FROM || process.env.RESEND_FROM || "Codeyoung <onboarding@resend.dev>",
+  MENTOR_RESEND_API_KEY: process.env.MENTOR_RESEND_API_KEY || process.env.RESEND_API_KEY,
+  MENTOR_RESEND_FROM: process.env.MENTOR_RESEND_FROM || process.env.RESEND_FROM || "Codeyoung <onboarding@resend.dev>",
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   RESEND_FROM: process.env.RESEND_FROM || "Codeyoung <onboarding@resend.dev>",
 

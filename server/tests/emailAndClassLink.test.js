@@ -96,4 +96,58 @@ describe("ClassLink and Email Service Tests", () => {
       globalThis.fetch = originalFetch;
     }
   });
+
+  it("uses separate parent and mentor Resend credentials and sender identities", async () => {
+    const originalNodeEnv = CONFIG.NODE_ENV;
+    const originalParentKey = CONFIG.PARENT_RESEND_API_KEY;
+    const originalMentorKey = CONFIG.MENTOR_RESEND_API_KEY;
+    const originalParentFrom = CONFIG.PARENT_RESEND_FROM;
+    const originalMentorFrom = CONFIG.MENTOR_RESEND_FROM;
+    const originalFetch = globalThis.fetch;
+    const authCalls = [];
+    const requestBodies = [];
+
+    CONFIG.NODE_ENV = "production";
+    CONFIG.PARENT_RESEND_API_KEY = "parent-resend-key";
+    CONFIG.MENTOR_RESEND_API_KEY = "mentor-resend-key";
+    CONFIG.PARENT_RESEND_FROM = "Codeyoung <bookings@codeyoung.com>";
+    CONFIG.MENTOR_RESEND_FROM = "Codeyoung Mentors <mentors@codeyoung.com>";
+
+    globalThis.fetch = async (_url, options) => {
+      authCalls.push(options.headers.Authorization);
+      requestBodies.push(JSON.parse(options.body));
+      return { ok: true, json: async () => ({ id: "test-email-id" }) };
+    };
+
+    try {
+      await emailService.sendViaResend({
+        to: "parent@example.com",
+        subject: "Parent booking",
+        html: "<p>Parent</p>",
+        text: "Parent",
+        provider: "parent",
+      });
+
+      await emailService.sendViaResend({
+        to: "mentor@example.com",
+        subject: "Mentor booking",
+        html: "<p>Mentor</p>",
+        text: "Mentor",
+        provider: "mentor",
+      });
+
+      assert.deepEqual(authCalls, ["Bearer parent-resend-key", "Bearer mentor-resend-key"]);
+      assert.deepEqual(requestBodies[0].to, ["parent@example.com"]);
+      assert.deepEqual(requestBodies[1].to, ["mentor@example.com"]);
+      assert.equal(requestBodies[0].from, "Codeyoung <bookings@codeyoung.com>");
+      assert.equal(requestBodies[1].from, "Codeyoung Mentors <mentors@codeyoung.com>");
+    } finally {
+      CONFIG.NODE_ENV = originalNodeEnv;
+      CONFIG.PARENT_RESEND_API_KEY = originalParentKey;
+      CONFIG.MENTOR_RESEND_API_KEY = originalMentorKey;
+      CONFIG.PARENT_RESEND_FROM = originalParentFrom;
+      CONFIG.MENTOR_RESEND_FROM = originalMentorFrom;
+      globalThis.fetch = originalFetch;
+    }
+  });
 });

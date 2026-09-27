@@ -6,16 +6,49 @@ class EmailService {
   constructor() {
     this.transporter = null;
     this.fromEmail = null;
+    this.parentFromEmail = null;
+    this.mentorFromEmail = null;
     this.mode = null; // "gmail" | "resend" | "none"
     this.init();
   }
 
+  getResendSettings(provider = "parent") {
+    const isMentorProvider = provider === "mentor";
+    const apiKey = isMentorProvider
+      ? CONFIG.MENTOR_RESEND_API_KEY || CONFIG.RESEND_API_KEY
+      : CONFIG.PARENT_RESEND_API_KEY || CONFIG.RESEND_API_KEY;
+
+    const configuredFromEmail = isMentorProvider
+      ? CONFIG.MENTOR_RESEND_FROM || CONFIG.RESEND_FROM || "Codeyoung <onboarding@resend.dev>"
+      : CONFIG.PARENT_RESEND_FROM || CONFIG.RESEND_FROM || "Codeyoung <onboarding@resend.dev>";
+
+    const providerSpecificFrom = provider === "mentor" ? this.mentorFromEmail : this.parentFromEmail;
+    const fallbackFrom = this.fromEmail || providerSpecificFrom || "Codeyoung <onboarding@resend.dev>";
+
+    const fromEmail =
+      configuredFromEmail === "Codeyoung <onboarding@resend.dev>"
+        ? (providerSpecificFrom && providerSpecificFrom !== "Codeyoung <onboarding@resend.dev>"
+            ? providerSpecificFrom
+            : fallbackFrom)
+        : configuredFromEmail;
+
+    return { apiKey, fromEmail };
+  }
+
   init() {
     // ── Priority 1: Resend API ─────────────────────────────────────────────
-    if (CONFIG.RESEND_API_KEY) {
-      this.fromEmail = CONFIG.RESEND_FROM || "Codeyoung <onboarding@resend.dev>";
+    const hasResendConfig = Boolean(
+      CONFIG.PARENT_RESEND_API_KEY || CONFIG.MENTOR_RESEND_API_KEY || CONFIG.RESEND_API_KEY
+    );
+
+    if (hasResendConfig) {
+      this.parentFromEmail = CONFIG.PARENT_RESEND_FROM || CONFIG.RESEND_FROM || "Codeyoung <onboarding@resend.dev>";
+      this.mentorFromEmail = CONFIG.MENTOR_RESEND_FROM || CONFIG.RESEND_FROM || "Codeyoung <onboarding@resend.dev>";
+      this.fromEmail = this.parentFromEmail;
       this.mode = "resend";
-      console.log(`[EmailService] ✅ Resend API ready (from: ${this.fromEmail})`);
+      console.log(
+        `[EmailService] ✅ Resend API ready (parent: ${this.parentFromEmail}, mentor: ${this.mentorFromEmail})`
+      );
       return;
     }
 
@@ -66,7 +99,7 @@ class EmailService {
   /**
    * Core send method — routes to the correct transport
    */
-  async send({ to, subject, html, text }) {
+  async send({ to, subject, html, text, provider = "parent" }) {
     if (this.mode === "gmail" || this.mode === "smtp") {
       const info = await this.transporter.sendMail({
         from: this.fromEmail,
@@ -79,7 +112,7 @@ class EmailService {
     }
 
     if (this.mode === "resend") {
-      return this.sendViaResend({ to, subject, html, text });
+      return this.sendViaResend({ to, subject, html, text, provider });
     }
 
     // No transport — just log
@@ -87,23 +120,27 @@ class EmailService {
     return { provider: "dry-run" };
   }
 
-  async sendViaResend({ to, subject, html, text, replyTo }) {
+  async sendViaResend({ to, subject, html, text, replyTo, provider = "parent" }) {
+    const { apiKey, fromEmail } = this.getResendSettings(provider);
     const toList = Array.isArray(to) ? to : [to];
 
     // Resend sandbox (onboarding@resend.dev) can ONLY deliver to the Resend
     // account owner's email. In sandbox mode, all emails are redirected to
     // the admin inbox. The subject is kept clean — no email addresses shown.
-    const isSandbox = this.fromEmail.includes("onboarding@resend.dev");
+    const isSandbox = fromEmail.includes("onboarding@resend.dev");
     if (isSandbox && CONFIG.NODE_ENV === "production") {
       throw new Error(
-        "Resend sandbox sender cannot deliver to parents in production. Verify a sending domain and set RESEND_FROM to its sender address."
+        "Resend sandbox sender cannot deliver to parents in production. Verify a sending domain and set RESEND_FROM or PARENT_RESEND_FROM / MENTOR_RESEND_FROM to a verified sender address."
       );
     }
 
-    const adminEmail = CONFIG.RESEND_ADMIN_EMAIL || CONFIG.MENTOR_NOTIFICATION_EMAIL || "tahashariff2@gmail.com";
+    const adminEmail =
+      provider === "mentor"
+        ? CONFIG.MENTOR_NOTIFICATION_EMAIL || "tahashariff2@gmail.com"
+        : CONFIG.RESEND_ADMIN_EMAIL || CONFIG.MENTOR_NOTIFICATION_EMAIL || "tahashariff2@gmail.com";
 
     const body = {
-      from: this.fromEmail,
+      from: fromEmail,
       to: isSandbox ? [adminEmail] : toList,
       // Keep subject clean — do NOT expose recipient email in the subject
       subject: subject,
@@ -113,13 +150,13 @@ class EmailService {
     };
 
     if (isSandbox && toList[0] !== adminEmail) {
-      console.log(`[EmailService] ⚠️  Sandbox mode: redirecting email from ${toList.join(", ")} → ${adminEmail}`);
+      console.log(`[EmailService] ⚠️  Sandbox mode: redirecting ${provider} email from ${toList.join(", ")} → ${adminEmail}`);
     }
 
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${CONFIG.RESEND_API_KEY}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
@@ -128,7 +165,7 @@ class EmailService {
     if (!response.ok) {
       throw new Error(data.message || data.error || `Resend HTTP ${response.status}`);
     }
-    return { messageId: data.id, provider: "resend", sandboxRedirected: isSandbox };
+    return { messageId: data.id, provider: "resend", sandboxRedirected: isSandbox, sender: fromEmail };
   }
 
   // ────────────────────────────────────────────────────────────────────────
@@ -213,7 +250,7 @@ See you in class!
 The Codeyoung Team
       `.trim();
 
-      const result = await this.send({ to: parent.email, subject, html, text });
+      const result = await this.send({ to: parent.email, subject, html, text, provider: "parent" });
       console.log(`[EmailService] ✅ Parent confirmation sent to ${parent.email} via ${result.provider} (${result.messageId || ""})`);
       return { success: true, ...result };
     } catch (err) {
@@ -331,7 +368,7 @@ Happy teaching!
 Codeyoung Operations
       `.trim();
 
-      const result = await this.send({ to: mentorEmail, subject, html, text });
+      const result = await this.send({ to: mentorEmail, subject, html, text, provider: "mentor" });
       console.log(`[EmailService] ✅ Mentor notification sent to ${mentorEmail} via ${result.provider} (${result.messageId || ""})`);
       return { success: true, ...result };
     } catch (err) {
