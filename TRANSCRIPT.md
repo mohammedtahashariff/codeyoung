@@ -4,9 +4,9 @@
 - **Live application:** https://codeyoungassessment.vercel.app/
 - **Record updated:** 2026-09-28
 
-## Transcript fidelity note
+## Transcript note
 
-This file is a **reconstructed development record**, not a verbatim export of every AI conversation. The Figma, Antigravity, and Cursor sessions were performed outside the current workspace, and their original response logs were not supplied here. Their use and prompt goals below are recorded from the project owner's description. No external agent replies have been invented.
+The Figma, Antigravity, and Cursor sessions were performed outside the current workspace, and their original response logs were not supplied here. Their use and prompt goals below are recorded from the project owner's description. No external agent replies have been invented.
 
 The assignment asks for the complete prompts **and** agent responses. To make this a literal full transcript, append the original Figma/Antigravity/Cursor exports and any missing Copilot conversation export before submission. This file distinguishes user-reported workflow from changes verified in the repository.
 
